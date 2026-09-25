@@ -1,22 +1,38 @@
 const mongoose = require('mongoose');
 const env = require('./env');
 
-let isConnected = false;
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
 
 async function connectDB() {
-  if (isConnected) {
-    return;
+  if (cached.conn) {
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    const uri = process.env.MONGODB_URI || env.MONGODB_URI;
+    console.log('[Database] Connecting to MongoDB...');
+    cached.promise = mongoose
+      .connect(uri, {
+        bufferCommands: false,
+        serverSelectionTimeoutMS: 8000,
+      })
+      .then((mongooseInstance) => {
+        console.log(`[Database] MongoDB connected successfully to: ${mongooseInstance.connection.host}/${mongooseInstance.connection.name}`);
+        return mongooseInstance;
+      });
   }
 
   try {
-    const conn = await mongoose.connect(env.MONGODB_URI, {
-      serverSelectionTimeoutMS: 5000,
-    });
-    isConnected = true;
-    console.log(`[Database] MongoDB connected successfully to: ${conn.connection.host}/${conn.connection.name}`);
+    cached.conn = await cached.promise;
+    return cached.conn;
   } catch (error) {
+    cached.promise = null;
     console.error(`[Database Error] MongoDB connection failure: ${error.message}`);
-    console.warn(`[Database Warning] Running in memory / offline mode if DB not available.`);
+    throw error;
   }
 }
 
