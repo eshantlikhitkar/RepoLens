@@ -1,4 +1,4 @@
-import api from './api';
+import api, { API_BASE_URL } from './api';
 
 export const authService = {
   async getMe() {
@@ -23,6 +23,6 @@ export const authService = {
   },
 
   getGitHubLoginUrl() {
-    return '/api/auth/github';
+    return `${API_BASE_URL}/api/auth/github`;
   },
 };

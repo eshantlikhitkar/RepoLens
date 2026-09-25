@@ -82,7 +82,14 @@ export function Navbar({ currentRepo = null }) {
           ) : (
             <div className="flex items-center gap-2">
               <button
-                onClick={loginDemo}
+                onClick={async () => {
+                  try {
+                    await loginDemo();
+                    navigate('/dashboard');
+                  } catch (e) {
+                    console.error('Demo login error', e);
+                  }
+                }}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-300 bg-[#21262d] hover:bg-[#30363d] hover:text-white rounded-lg border border-[#30363d] transition-colors"
               >
                 <Play className="w-3 h-3 text-indigo-400" />

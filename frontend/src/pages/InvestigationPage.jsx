@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { repoService } from '../services/repoService';
 import { chatService } from '../services/chatService';
+import { API_BASE_URL } from '../services/api';
 import { Navbar } from '../components/layout/Navbar';
 import { RepoHeader } from '../components/repository/RepoHeader';
 import { FileTree } from '../components/repository/FileTree';
@@ -227,7 +228,7 @@ export function InvestigationPage() {
 
   // Real-time SSE listener for Indexing Progress
   const listenIndexingSSE = (repoId) => {
-    const eventSource = new EventSource(`/api/repositories/${repoId}/status/stream`);
+    const eventSource = new EventSource(`${API_BASE_URL}/api/repositories/${repoId}/status/stream`);
 
     eventSource.onmessage = (event) => {
       if (event.data === '[DONE]') {

@@ -69,7 +69,14 @@ export function LandingPage() {
               </button>
 
               <button
-                onClick={loginDemo}
+                onClick={async () => {
+                  try {
+                    await loginDemo();
+                    navigate('/dashboard');
+                  } catch (e) {
+                    console.error('Demo login error', e);
+                  }
+                }}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold text-gray-300 hover:text-white bg-[#161b22] hover:bg-[#21262d] border border-[#30363d] rounded-xl transition-all"
               >
                 <Play className="w-4 h-4 text-indigo-400" />

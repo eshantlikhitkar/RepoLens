@@ -1,4 +1,4 @@
-import api from './api';
+import api, { API_BASE_URL } from './api';
 
 export const chatService = {
   /**
@@ -14,7 +14,7 @@ export const chatService = {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`/api/repositories/${repositoryId}/chat`, {
+      const response = await fetch(`${API_BASE_URL}/api/repositories/${repositoryId}/chat`, {
         method: 'POST',
         headers,
         credentials: 'include',
